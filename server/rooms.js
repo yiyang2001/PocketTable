@@ -191,7 +191,7 @@ class Room {
       this._clearGrace(pid);
       this.timers.grace.set(pid, later(() => this.leave(pid), this.deps.graceMs));
     } else {
-      this._schedule(); // 轮到他时由电脑代打
+      this._schedule(); // 轮到这个座位时由电脑代打
     }
     this._checkAbandon();
     this.broadcastRoom();

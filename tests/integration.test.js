@@ -190,7 +190,7 @@ test('端口被占用时自动换下一个端口', async () => {
   }
 });
 
-test('对局中断线：轮到他时由电脑代打，回来后自己接着打', async () => {
+test('对局中断线：轮到断线的人时由电脑代打，回来后自己接着打', async () => {
   const srv = await createServer({ ...serverOpts(tmpDir()), autoplayMs: 50 });
   const a = new Client(srv.port), b = new Client(srv.port);
   try {
