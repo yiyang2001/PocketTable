@@ -25,9 +25,13 @@ function loadRegistry(dir = GAMES_DIR) {
   return out;
 }
 
-/** 给客户端的游戏目录 @param {Map<string, GameEntry>} registry */
-function catalog(registry) {
-  return [...registry.values()].map(({ game, bot }) => ({
+/**
+ * 给客户端的游戏目录
+ * @param {Map<string, GameEntry>} registry
+ * @param {{ dev?: boolean }} [opts]
+ */
+function catalog(registry, { dev = process.env.DEV_GAMES === '1' } = {}) {
+  return [...registry.values()].filter(({ game }) => dev || !game.dev).map(({ game, bot }) => ({
     id: game.id,
     name: game.name,
     blurb: game.blurb || '',

@@ -81,6 +81,7 @@ export function Toasts({ items }) {
 // ---------- 游戏封面 ----------
 
 const COVERS = {
+  kittens: { color: '#FF8A2A', icon: html`<circle cx="16" cy="21" r="10" fill="#1F1A2E" /><path d="M23 13l4-4" /><path d="M27 9c2-1 4 0 4 2" /><path d="M12 18l2 2" stroke="#FFF8EC" />` },
   count21: { color: '#FFD84D', icon: html`<text x="18" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#1F1A2E" stroke="none">21</text>` },
 };
 

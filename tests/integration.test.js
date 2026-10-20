@@ -165,7 +165,8 @@ test('静态文件与接口：首页、游戏目录、二维码；规则文件�
     assert.equal(home.status, 200);
     assert.match(await home.text(), /<div id="app">/);
     const games = await (await fetch(`${base}/api/games`)).json();
-    assert.ok(games.some((g) => g.id === 'count21'));
+    assert.ok(games.some((g) => g.id === 'kittens'));
+    assert.ok(!games.some((g) => g.id === 'count21'), '开发用的游戏不在大厅里显示');
     const qr = await fetch(`${base}/api/qr?text=hello`);
     assert.match(await qr.text(), /<svg/);
     assert.equal((await fetch(`${base}/games/count21/view.js`)).status, 200);
@@ -186,5 +187,39 @@ test('端口被占用时自动换下一个端口', async () => {
   } finally {
     await second.close();
     await first.close();
+  }
+});
+
+test('对局中断线：轮到他时由电脑代打，回来后自己接着打', async () => {
+  const srv = await createServer({ ...serverOpts(tmpDir()), autoplayMs: 50 });
+  const a = new Client(srv.port), b = new Client(srv.port);
+  try {
+    await a.req('hello', { name: '小明' });
+    await b.req('hello', { name: '阿杰' });
+    const tokenB = b.inbox.find((m) => m.t === 'welcome').token;
+    const { data } = await a.req('room.create', { game: 'count21', options: { turnSec: 30 } });
+    await b.req('room.join', { code: data.code });
+    await b.req('room.ready', { ready: true });
+    await a.req('room.start');
+    b.close();
+    // 只有 a 在出牌；b 的回合由电脑代打，所以对局能自己走到结束
+    const deadline = Date.now() + 10000;
+    while (Date.now() < deadline && !(a.state && a.state.result)) {
+      const s = a.state;
+      if (s && s.actors.includes(s.seat)) await a.req('move', { name: 'add', args: { n: 1 } });
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    assert.ok(a.state.result, '断线的人没有被代打，对局卡住了');
+    const tookTurns = a.state.view.history.filter((h) => h.seat !== a.state.seat).length;
+    assert.ok(tookTurns > 0);
+
+    const back = new Client(srv.port);
+    await back.req('hello', { token: tokenB });
+    const room = await back.until((m) => m.t === 'room');
+    assert.equal(room.room.code, data.code);
+    back.close();
+  } finally {
+    a.close();
+    await srv.close();
   }
 });

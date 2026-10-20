@@ -24,6 +24,7 @@ const every = (fn, ms) => setInterval(fn, ms).unref();
  *   send: (pid: string, msg: any) => void,
  *   now: () => number,
  *   botDelay: () => number,
+ *   autoplayMs: number,
  *   graceMs: number,
  *   abandonMs: number,
  *   onChange: () => void,
@@ -189,6 +190,8 @@ class Room {
     if (this.phase !== 'playing') {
       this._clearGrace(pid);
       this.timers.grace.set(pid, later(() => this.leave(pid), this.deps.graceMs));
+    } else {
+      this._schedule(); // 轮到他时由电脑代打
     }
     this._checkAbandon();
     this.broadcastRoom();
@@ -270,7 +273,7 @@ class Room {
     if (this.players.length < this.game.players.min) return 'err.not_enough_players';
     if (this.players.some((p) => !p.bot && p.pid !== this.hostPid && !p.ready)) return 'err.not_all_ready';
 
-    const seats = this.players.map((p, seat) => ({ seat, name: p.name, bot: !!p.bot }));
+    const seats = this.players.map((p, seat) => ({ seat, name: p.name, bot: !!p.bot, avatar: p.avatar }));
     this.match = new Match(this.game, { seats, options: this.options, seed: randomSeed(), startedAt: this.deps.now() });
     this.phase = 'playing';
     this.pendingEvents = [...this.match.lastEvents];
@@ -365,11 +368,14 @@ class Room {
     }
     for (const seat of m.actors()) {
       const p = this.players[seat];
-      if (!p || !p.bot || this.timers.bots.has(seat)) continue;
+      if (!p || this.timers.bots.has(seat)) continue;
+      // 电脑按正常节奏出；断线的真人等一会儿再由电脑代打，免得重连途中被抢着出牌
+      if (!p.bot && p.connected) continue;
+      const delay = p.bot ? this.deps.botDelay() : this.deps.autoplayMs;
       this.timers.bots.set(seat, later(() => {
         this.timers.bots.delete(seat);
         this._safe(() => this._botMove(seat));
-      }, this.deps.botDelay()));
+      }, delay));
     }
   }
 
@@ -377,11 +383,16 @@ class Room {
   _botMove(seat) {
     const m = this.match;
     if (!m || this.phase !== 'playing' || !m.actors().includes(seat)) return;
+    const p = this.players[seat];
+    if (!p || (!p.bot && p.connected)) return; // 代打途中本人回来了
     const now = this.deps.now();
     const { bot, game } = this.entry;
     let r = null;
-    const choice = bot ? bot.decide(m.view(seat), seat, this.botRng) : null;
-    if (choice) r = m.move(seat, choice.name, choice.args, now);
+    if (bot) {
+      const choice = bot.decide(m.view(seat), seat, this.botRng);
+      if (!choice) return; // 电脑决定这次不出
+      r = m.move(seat, choice.name, choice.args, now);
+    }
     if ((!r || !r.ok) && game.legalMoves) {
       // bot 出了非法招时退回到随机合法招，保证对局不会卡住
       const legal = game.legalMoves(m.state, seat);

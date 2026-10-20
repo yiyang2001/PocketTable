@@ -1,6 +1,6 @@
 'use strict';
 // 抢 21：轮流报数，每次加 1–3，谁报到目标数谁输。
-// 规则很小，用来验证引擎、房间、bot、计时和重放整条链路；爆炸猫做好后会从大厅隐藏。
+// 规则很小，用来验证引擎、房间、bot、计时和重放整条链路。大厅默认不显示（DEV_GAMES=1 才显示）。
 
 /**
  * @typedef {{ target: number, turnSec: number }} Options
@@ -47,6 +47,7 @@ function add(s, seat, n, ctx) {
 module.exports = {
   id: 'count21',
   name: '抢 21',
+  dev: true,
   blurb: '轮流报数，每次 1 到 3，谁报到 21 谁输',
   rulesVersion: 1,
   players: { min: 2, max: 6 },
