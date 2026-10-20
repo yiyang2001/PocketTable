@@ -42,7 +42,14 @@ body {
   overscroll-behavior: none;
 }
 button, input { font: inherit; color: inherit; }
-.screen { max-width: 480px; margin: 0 auto; padding: 16px 16px 28px; min-height: 100dvh; display: flex; flex-direction: column; gap: 16px; }
+/* 页面宽度：手机 < 720px，平板 720–1099px，电脑 ≥ 1100px */
+:root { --page-max: 480px; --gutter: 16px; }
+@media (min-width: 720px) { :root { --page-max: 980px; --gutter: 28px; } }
+@media (min-width: 1100px) { :root { --page-max: 1200px; --gutter: 40px; } }
+
+.screen { width: 100%; max-width: var(--page-max); margin: 0 auto; padding: var(--gutter) var(--gutter) 28px; min-height: 100dvh; display: flex; flex-direction: column; gap: 16px; }
+.bleed-paper { background: var(--paper); min-height: 100dvh; }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 .disp { font-family: var(--font-display); font-weight: 400; }
 .num { font-family: var(--font-num); font-weight: 700; font-variant-numeric: tabular-nums; }
 .small { font-size: 13px; }
@@ -126,3 +133,64 @@ button.chip { cursor: pointer; min-height: 32px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .calm *, .calm *::before, .calm *::after { animation: none !important; transition: none !important; }
+
+/* ---------- 大厅 ---------- */
+.home { display: flex; flex-direction: column; gap: 16px; }
+.home-side, .home-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tagline { font-size: 15px; font-weight: 700; }
+.game-list { display: flex; flex-direction: column; gap: 12px; }
+.game-card-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.game-blurb { display: none; font-size: 14px; color: var(--muted-ink); }
+
+/* ---------- 等待房间 ---------- */
+.room { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.qr-card { background: var(--sun); padding: 14px; display: flex; gap: 14px; align-items: center; }
+.qr-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.addr { font-size: 14px; background: var(--white); border: 2.5px solid var(--ink); border-radius: 10px; padding: 2px 8px; word-break: break-all; align-self: flex-start; }
+.room-opts { background: var(--white); box-shadow: none; }
+.room-acts { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ---------- 对局 ---------- */
+.game-body { flex: 1; display: flex; flex-direction: column; }
+
+/* ---------- 平板和电脑 ---------- */
+@media (min-width: 720px) {
+  .home { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .home-side { position: sticky; top: var(--gutter); }
+  .game-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+  .game-card { flex-direction: column; align-items: stretch; padding: 0; gap: 0; overflow: hidden; }
+  .game-card .cover { width: 100%; height: 128px; border: none; border-bottom: var(--stroke) solid var(--ink); border-radius: 0; }
+  .game-card .cover svg { width: 64px; height: 64px; }
+  .game-card-body { padding: 12px 14px 14px; }
+  .game-card-arrow { display: none; }
+  .game-blurb { display: block; }
+
+  .room {
+    display: grid; gap: 22px 28px; align-items: start;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas: "head head" "qr seats" "opts seats" "acts seats";
+  }
+  .room-head { grid-area: head; }
+  .qr-card { grid-area: qr; flex-direction: column; text-align: center; }
+  .qr-card .qr { width: 200px; height: 200px; }
+  .qr-text { align-items: center; }
+  .qr-text .addr { align-self: center; }
+  .room .seats { grid-area: seats; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .room-opts { grid-area: opts; }
+  .room-acts { grid-area: acts; margin-top: 0; }
+
+  .sheet-back { align-items: center; }
+  .sheet { border-radius: var(--radius); max-width: 440px; }
+}
+
+/* 有鼠标的设备：悬停时贴纸微微抬起 */
+@media (hover: hover) {
+  .btn:hover:not(:disabled), .game-card:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+  .btn:active:not(:disabled), .game-card:active { transform: translate(4px, 4px); box-shadow: none; }
+  button.chip:hover:not(:disabled) { background: var(--paper); }
+  button.chip.on:hover:not(:disabled) { background: var(--sun); }
+}
+
+.avatar-btn { border: none; background: none; padding: 0; cursor: pointer; border-radius: 50%; display: inline-flex; }
+@media (max-width: 399px) { .tagline { display: none; } }

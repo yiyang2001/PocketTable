@@ -64,6 +64,8 @@ export interface LegalMove {
 export interface GameDef<S = any, O = any> {
   id: string;
   name: string;
+  /** 大厅卡片上的一句话简介 */
+  blurb?: string;
   /** 规则改动时 +1，旧记录不再按新规则重放 */
   rulesVersion: number;
   players: { min: number; max: number };

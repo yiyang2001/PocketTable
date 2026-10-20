@@ -7,10 +7,10 @@
   "private": true,
   "type": "commonjs",
   "main": "server/index.js",
-  "engines": { "node": ">=20" },
+  "engines": { "node": ">=22" },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test --test-concurrency=1 tests/",
+    "test": "node --test --test-concurrency=1 \"tests/*.test.js\"",
     "check": "tsc -p ."
   },
   "dependencies": {

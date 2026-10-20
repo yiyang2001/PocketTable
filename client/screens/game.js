@@ -70,11 +70,13 @@ export function GameScreen() {
       ${game && !game.result && html`<${Timer} deadline=${game.deadline} />`}
       <button class="btn btn-icon" aria-label="报告问题（下载对局记录）" title="报告问题" onClick=${report}><${Icon} name="flag" size=${20} /></button>
     </header>
-    ${game && View
-      ? html`<${View} key=${room.game} view=${game.view} seat=${game.seat} actors=${game.actors}
-          deadline=${game.deadline} events=${game.events} ver=${game.ver}
-          seats=${room.matchSeats || []} send=${send} />`
-      : html`<div class="center" style=${{ marginTop: 80 }}>加载中…</div>`}
+    <div class="game-body">
+      ${game && View
+        ? html`<${View} key=${room.game} view=${game.view} seat=${game.seat} actors=${game.actors}
+            deadline=${game.deadline} events=${game.events} ver=${game.ver}
+            seats=${room.matchSeats || []} send=${send} />`
+        : html`<div class="center" style=${{ marginTop: 80 }}>加载中…</div>`}
+    </div>
     ${game && game.result && room.phase === 'ended' && html`<${Result} room=${room} game=${game} isHost=${isHost} />`}
   </main>`;
 }
