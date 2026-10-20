@@ -18,6 +18,7 @@ export interface SeatInfo {
   seat: Seat;
   name: string;
   bot: boolean;
+  avatar?: number;
 }
 
 export interface GameEvent {
@@ -47,7 +48,7 @@ export interface MoveDef<S = any, O = any> {
 }
 
 export type OptionDef =
-  | { type: 'enum'; values: (string | number)[]; default: string | number; label?: string }
+  | { type: 'enum'; values: (string | number)[]; labels?: string[]; default: string | number; label?: string }
   | { type: 'int'; min: number; max: number; default: number; label?: string };
 
 export interface Result {
@@ -66,6 +67,8 @@ export interface GameDef<S = any, O = any> {
   name: string;
   /** 大厅卡片上的一句话简介 */
   blurb?: string;
+  /** 开发用的游戏：大厅不显示（设置 DEV_GAMES=1 才显示），但仍然可以开房 */
+  dev?: boolean;
   /** 规则改动时 +1，旧记录不再按新规则重放 */
   rulesVersion: number;
   players: { min: number; max: number };
@@ -93,6 +96,7 @@ export interface GameDef<S = any, O = any> {
 }
 
 export interface BotDef {
+  /** 返回 null 表示"这次不出"（例如反应窗口里不打「不要」）；返回的招非法时引擎退回随机合法招 */
   decide(view: any, seat: Seat, rng: Rng): LegalMove | null;
 }
 

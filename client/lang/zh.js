@@ -24,6 +24,15 @@ const zh = {
   'err.game_over': '对局已经结束了',
   'err.illegal': '这样出不行',
 
+  'kittens.err.no_card': '你没有这张牌',
+  'kittens.err.bad_combo': '这几张牌不能这样出',
+  'kittens.err.bad_target': '选一个还在场上的人',
+  'kittens.err.target_empty': '对方手里没牌了',
+  'kittens.err.bad_named': '点名的牌不对',
+  'kittens.err.nothing_to_nope': '现在没有可以「不要」的牌',
+  'kittens.err.out': '你已经出局了',
+  'kittens.err.bad_pos': '位置不对',
+
   'count21.err.range': '每次只能加 1 到 3',
   'count21.err.over': '超过目标数了',
 };

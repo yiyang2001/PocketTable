@@ -89,9 +89,9 @@ export function RoomScreen() {
       ${Object.entries(meta.options).map(([key, def]) => html`<div key=${key} class="row" style=${{ justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <span style=${{ fontWeight: 700, fontSize: 15 }}>${def.label || key}</span>
         <span class="row" style=${{ gap: 6 }}>
-          ${def.values.map((v) => html`<button key=${v} class=${`chip${room.options[key] === v ? ' on' : ''}`}
+          ${def.values.map((v, i) => html`<button key=${v} class=${`chip${room.options[key] === v ? ' on' : ''}`}
             disabled=${!isHost} aria-pressed=${room.options[key] === v}
-            onClick=${() => req('room.option', { key, value: v })}>${v}</button>`)}
+            onClick=${() => req('room.option', { key, value: v })}>${def.labels ? def.labels[i] : v}</button>`)}
         </span>
       </div>`)}
     </section>`}

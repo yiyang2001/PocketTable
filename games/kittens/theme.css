@@ -1,0 +1,105 @@
+/* 爆炸猫：橙色放射背景，夸张、爆笑 */
+body {
+  background-color: #FF8A2A;
+  background-image: repeating-conic-gradient(from 0deg at 50% 38%, #FF8A2A 0 12deg, #FF9A40 12deg 24deg);
+  background-size: auto;
+  background-attachment: fixed;
+}
+
+.ek { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.ek-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; flex: 1; }
+.ek-side { display: none; }
+
+/* 对手 */
+.ek-opps { display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
+.ek-opp { display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; min-width: 64px; }
+.ek-opp.on .avatar { outline: 4px solid var(--sun); outline-offset: 2px; }
+.ek-opp.out { opacity: .55; }
+.ek-opp-name { font-size: 13px; font-weight: 900; max-width: 84px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ek-count { background: var(--white); border: 2.5px solid var(--ink); border-radius: 10px; padding: 0 7px; font-size: 13px; }
+.ek-x { position: absolute; top: -8px; right: -2px; background: var(--tomato); border: 2.5px solid var(--ink); border-radius: 10px; padding: 0 5px; font-size: 13px; transform: rotate(8deg); }
+
+/* 提示条 */
+.ek-banner-row { display: flex; gap: 10px; align-items: stretch; }
+.ek-banner { flex: 1; background: var(--paper); padding: 8px 12px; font-size: 14px; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; gap: 4px; justify-content: center; min-height: 48px; }
+.ek-banner.react { background: var(--white); }
+.ek-help-btn { font-family: var(--font-display); font-size: 22px; align-self: center; }
+.ek-react-bar { display: block; height: 8px; border: 2px solid var(--ink); border-radius: 6px; background: var(--paper); overflow: hidden; }
+.ek-react-bar span { display: block; height: 100%; background: var(--tomato); transition: width .1s linear; }
+
+/* 桌面：牌堆和弃牌堆 */
+.ek-table { flex: 1; display: flex; align-items: center; justify-content: center; gap: 30px; min-height: 180px; }
+.ek-pile { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.ek-deck { position: relative; width: 102px; height: 142px; }
+.ek-deck span { position: absolute; width: 94px; height: 134px; border: var(--stroke) solid var(--ink); border-radius: 14px; background: var(--tomato); }
+.ek-deck span:nth-child(1) { left: 8px; top: 8px; }
+.ek-deck span:nth-child(2) { left: 4px; top: 4px; }
+.ek-deck span.top { left: 0; top: 0; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; color: var(--ink);
+  background-image: repeating-linear-gradient(45deg, #FF7A60 0 8px, var(--tomato) 8px 16px); }
+.ek-empty { width: 94px; height: 134px; border: var(--stroke) dashed var(--ink); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+
+/* 牌 */
+.ek-card { flex: none; width: 84px; height: 118px; background: var(--white); border: var(--stroke) solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink);
+  display: flex; flex-direction: column; overflow: hidden; padding: 0; cursor: pointer; transition: transform .12s; color: var(--ink); }
+span.ek-card { cursor: default; }
+.ek-card.small { width: 64px; height: 90px; border-radius: 11px; }
+.ek-card.dark { background: var(--ink); color: var(--paper); }
+.ek-band { height: 38px; border-bottom: var(--stroke) solid var(--ink); display: flex; align-items: center; justify-content: center; color: var(--ink); }
+.ek-card.small .ek-band { height: 30px; }
+.ek-card.dark .ek-band { color: var(--paper); }
+.ek-name { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 19px; padding: 0 4px; text-align: center; line-height: 1.1; }
+.ek-card.small .ek-name { font-size: 15px; }
+.ek-card.sel { transform: translateY(-16px); box-shadow: 0 0 0 3px var(--sun), 4px 6px 0 3px var(--ink); }
+.ek-card:disabled { cursor: default; }
+
+.ek-peek { background: var(--paper); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; align-self: center; box-shadow: 3px 3px 0 var(--ink); }
+
+.ek-turn { display: flex; justify-content: center; }
+.ek-turn span { background: var(--sun); padding: 4px 16px; font-size: 22px; transform: rotate(-2deg); }
+
+/* 手牌：手机上横向滑动并叠在一起 */
+.ek-hand { display: flex; overflow-x: auto; padding: 22px 10px 10px; margin: 0 -8px; scrollbar-width: thin; }
+.ek-hand .ek-card + .ek-card { margin-left: -22px; }
+.ek-hand .ek-card:nth-child(odd) { rotate: -2deg; }
+.ek-hand .ek-card:nth-child(even) { rotate: 2deg; }
+
+.ek-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.ek-actions .btn { min-width: 0; white-space: nowrap; font-size: 19px; padding-left: 10px; padding-right: 10px; }
+.ek-actions .ek-nope { flex: 1 1 100%; background: var(--sun); font-size: 30px; animation: ek-pulse 0.8s ease-in-out infinite alternate; }
+@keyframes ek-pulse { from { transform: scale(1); } to { transform: scale(1.03); } }
+
+/* 弹出层里的选择 */
+.ek-target { background: var(--white); padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; min-width: 92px; }
+.ek-pick-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.ek-pos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ek-guide { display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow: auto; padding: 4px; }
+
+/* 大字提示 */
+.ek-flash { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 30; }
+.ek-flash span { font-size: 40px; padding: 10px 26px; background: var(--white); animation: ek-boom .35s cubic-bezier(.2, 1.6, .4, 1); transform: rotate(-3deg); }
+.ek-flash.boom span { background: var(--tomato); font-size: 48px; }
+.ek-flash.safe span { background: var(--mint); }
+.ek-flash.nope span { background: var(--orange); }
+@keyframes ek-boom { from { transform: scale(.3) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(-3deg); opacity: 1; } }
+
+/* 平板和电脑：右边是记录和说明 */
+@media (min-width: 720px) {
+  .ek { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; align-items: stretch; }
+  .ek-side { display: flex; flex-direction: column; gap: 12px; }
+  .ek-help-btn { display: none; }
+  .ek-log { background: var(--paper); padding: 12px 14px; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; gap: 6px; }
+  .ek-log ol { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; max-height: 60vh; overflow: auto; }
+  .ek-log li:first-child { font-weight: 700; }
+  .ek-card { width: 100px; height: 140px; }
+  .ek-name { font-size: 22px; }
+  .ek-hand { flex-wrap: wrap; justify-content: center; overflow: visible; margin: 0; row-gap: 14px; }
+  .ek-hand .ek-card + .ek-card { margin-left: -10px; }
+  .ek-actions { justify-content: center; }
+  .ek-actions .btn { flex: 0 1 260px; font-size: 22px; }
+  .ek-actions .ek-nope { flex: 0 1 540px; font-size: 32px; }
+  .ek-table { gap: 60px; }
+}
+@media (hover: hover) {
+  .ek-hand .ek-card:not(:disabled):hover { transform: translateY(-8px); }
+  .ek-hand .ek-card.sel:hover { transform: translateY(-16px); }
+}

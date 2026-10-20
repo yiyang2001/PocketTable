@@ -30,7 +30,7 @@ export default function Count21({ view, seat, actors, seats, send }) {
     <div class="c21-side">
       <div class="c21-seats">
         ${seats.map((s) => html`<div key=${s.seat} class=${`c21-seat${s.seat === view.current && view.loser === null ? ' on' : ''}`}>
-          <${Avatar} n=${s.seat} size=${44} dead=${view.loser === s.seat} />
+          <${Avatar} n=${s.avatar ?? s.seat} size=${44} dead=${view.loser === s.seat} />
           <span class="small" style=${{ fontWeight: 900 }}>${s.seat === seat ? '你' : s.name}</span>
         </div>`)}
       </div>
