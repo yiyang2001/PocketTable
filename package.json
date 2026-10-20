@@ -1,0 +1,26 @@
+{
+  "name": "pockettable",
+  "version": "0.1.0",
+  "description": "口袋桌：一部手机当主机的局域网派对桌游。LAN party board games hosted from a phone.",
+  "license": "MIT",
+  "author": "Yi Yang Teo",
+  "private": true,
+  "type": "commonjs",
+  "main": "server/index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test --test-concurrency=1 tests/",
+    "check": "tsc -p ."
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.13",
+    "htm": "3.1.1",
+    "typescript": "^5.7.0"
+  }
+}

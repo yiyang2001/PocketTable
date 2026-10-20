@@ -1,0 +1,11 @@
+/* 抢 21：阳光黄底，沿用默认令牌 */
+.c21 { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+.c21-seats { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.c21-seat { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px; border-radius: 16px; }
+.c21-seat.on .avatar { outline: 4px solid var(--tomato); outline-offset: 2px; }
+.c21-total { background: var(--white); display: flex; flex-direction: column; align-items: center; padding: 14px; }
+.c21-total .num { font-size: 88px; line-height: 1; }
+.c21-turn { align-self: center; background: var(--sun); padding: 6px 18px; font-size: 24px; transform: rotate(-2deg); }
+.c21-btns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.c21-btns .btn { font-size: 28px; }
+.c21-log { background: var(--paper); margin: 0; padding: 10px 14px 10px 32px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; box-shadow: none; max-height: 220px; overflow: auto; }
