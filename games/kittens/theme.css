@@ -14,6 +14,7 @@ body {
 .ek-opps { display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
 .ek-opp { display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; min-width: 64px; }
 .ek-opp.on .avatar { outline: 4px solid var(--sun); outline-offset: 2px; }
+.ek-now { position: absolute; top: -12px; z-index: 1; background: var(--sun); border: 2.5px solid var(--ink); border-radius: 10px; padding: 0 6px; font-size: 12px; font-weight: 900; white-space: nowrap; }
 .ek-opp.out { opacity: .55; }
 .ek-opp-name { font-size: 13px; font-weight: 900; max-width: 84px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ek-count { background: var(--white); border: 2.5px solid var(--ink); border-radius: 10px; padding: 0 7px; font-size: 13px; }
@@ -21,8 +22,16 @@ body {
 
 /* 提示条 */
 .ek-banner-row { display: flex; gap: 10px; align-items: stretch; }
-.ek-banner { flex: 1; background: var(--paper); padding: 8px 12px; font-size: 14px; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; gap: 4px; justify-content: center; min-height: 48px; }
+.ek-banner { flex: 1; min-width: 0; background: var(--paper); padding: 8px 12px; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; gap: 3px; justify-content: center; min-height: 56px; }
+.ek-head { font-size: 21px; line-height: 1.2; }
+.ek-head b { font-weight: inherit; }
+.ek-sub { font-size: 13px; opacity: .75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ek-banner.react { background: var(--white); }
+/* 轮到我：整条变黄并晃一下，和别人的回合一眼就能分开 */
+.ek-banner.mine { background: var(--sun); animation: ek-nudge .5s ease-out; }
+.ek-banner.mine .ek-head { font-size: 26px; }
+.ek-banner.mine .ek-sub { opacity: .85; }
+@keyframes ek-nudge { 0% { transform: scale(.94); } 60% { transform: scale(1.03); } 100% { transform: scale(1); } }
 .ek-help-btn { font-family: var(--font-display); font-size: 22px; align-self: center; }
 .ek-react-bar { display: block; height: 8px; border: 2px solid var(--ink); border-radius: 6px; background: var(--paper); overflow: hidden; }
 .ek-react-bar span { display: block; height: 100%; background: var(--tomato); transition: width .1s linear; }
@@ -49,19 +58,25 @@ span.ek-card { cursor: default; }
 .ek-card.dark .ek-band { color: var(--paper); }
 .ek-name { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 19px; padding: 0 4px; text-align: center; line-height: 1.1; }
 .ek-card.small .ek-name { font-size: 15px; }
+.ek-card { position: relative; }
+/* 同类多张：后面多叠一层，右上角写张数 */
+.ek-card.stack { box-shadow: 3px 3px 0 var(--ink), 7px 7px 0 var(--white), 7px 7px 0 2.5px var(--ink); }
+.ek-badge { position: absolute; bottom: 4px; right: 4px; background: var(--white); color: var(--ink); border: 2px solid var(--ink); border-radius: 9px; padding: 0 5px; font-size: 13px; font-weight: 900; line-height: 1.3; }
+.ek-card.sel .ek-badge { background: var(--sun); }
 .ek-card.sel { transform: translateY(-16px); box-shadow: 0 0 0 3px var(--sun), 4px 6px 0 3px var(--ink); }
 .ek-card:disabled { cursor: default; }
 
 .ek-peek { background: var(--paper); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; align-self: center; box-shadow: 3px 3px 0 var(--ink); }
 
-.ek-turn { display: flex; justify-content: center; }
-.ek-turn span { background: var(--sun); padding: 4px 16px; font-size: 22px; transform: rotate(-2deg); }
-
-/* 手牌：手机上横向滑动并叠在一起 */
-.ek-hand { display: flex; overflow-x: auto; padding: 22px 10px 10px; margin: 0 -8px; scrollbar-width: thin; }
-.ek-hand .ek-card + .ek-card { margin-left: -22px; }
-.ek-hand .ek-card:nth-child(odd) { rotate: -2deg; }
-.ek-hand .ek-card:nth-child(even) { rotate: 2deg; }
+/* 手牌：同类叠成一摞，手机上换行排开，不用左右滑 */
+.ek-hand { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 12px; padding: 18px 4px 8px; }
+.ek-hand .ek-card { width: 70px; height: 98px; }
+.ek-hand .ek-band { height: 32px; }
+.ek-hand .ek-name { font-size: 17px; }
+.ek-hand .ek-card:disabled { cursor: default; }
+/* 不是我的回合：手牌淡一点，轮到我时才"亮起来" */
+.ek-hand:not(.mine) .ek-card { filter: saturate(.55); opacity: .85; }
+.ek-tip { text-align: center; font-weight: 700; margin-top: -6px; }
 
 .ek-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .ek-actions .btn { min-width: 0; white-space: nowrap; font-size: 19px; padding-left: 10px; padding-right: 10px; }
@@ -75,9 +90,10 @@ span.ek-card { cursor: default; }
 .ek-guide { display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow: auto; padding: 4px; }
 
 /* 大字提示 */
-.ek-flash { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 30; }
-.ek-flash span { font-size: 40px; padding: 10px 26px; background: var(--white); animation: ek-boom .35s cubic-bezier(.2, 1.6, .4, 1); transform: rotate(-3deg); }
-.ek-flash.boom span { background: var(--tomato); font-size: 48px; }
+/* 大字提示：贴在屏幕上方，不挡牌堆和手牌，1.4 秒后自己消失 */
+.ek-flash { position: fixed; left: 0; right: 0; top: 20%; display: flex; justify-content: center; pointer-events: none; z-index: 30; padding: 0 16px; }
+.ek-flash span { font-size: 30px; padding: 8px 20px; max-width: 100%; text-align: center; background: var(--white); animation: ek-boom .35s cubic-bezier(.2, 1.6, .4, 1); transform: rotate(-3deg); }
+.ek-flash.boom span { background: var(--tomato); font-size: 34px; }
 .ek-flash.safe span { background: var(--mint); }
 .ek-flash.nope span { background: var(--orange); }
 @keyframes ek-boom { from { transform: scale(.3) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(-3deg); opacity: 1; } }
@@ -90,10 +106,12 @@ span.ek-card { cursor: default; }
   .ek-log { background: var(--paper); padding: 12px 14px; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; gap: 6px; }
   .ek-log ol { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; max-height: 60vh; overflow: auto; }
   .ek-log li:first-child { font-weight: 700; }
-  .ek-card { width: 100px; height: 140px; }
-  .ek-name { font-size: 22px; }
-  .ek-hand { flex-wrap: wrap; justify-content: center; overflow: visible; margin: 0; row-gap: 14px; }
-  .ek-hand .ek-card + .ek-card { margin-left: -10px; }
+  .ek-card, .ek-hand .ek-card { width: 100px; height: 140px; }
+  .ek-band, .ek-hand .ek-band { height: 38px; }
+  .ek-name, .ek-hand .ek-name { font-size: 22px; }
+  .ek-hand { gap: 18px 16px; }
+  .ek-head { font-size: 24px; }
+  .ek-banner.mine .ek-head { font-size: 30px; }
   .ek-actions { justify-content: center; }
   .ek-actions .btn { flex: 0 1 260px; font-size: 22px; }
   .ek-actions .ek-nope { flex: 0 1 540px; font-size: 32px; }
