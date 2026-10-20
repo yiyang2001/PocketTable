@@ -47,6 +47,7 @@ function add(s, seat, n, ctx) {
 module.exports = {
   id: 'count21',
   name: '抢 21',
+  blurb: '轮流报数，每次 1 到 3，谁报到 21 谁输',
   rulesVersion: 1,
   players: { min: 2, max: 6 },
   options: {

@@ -30,6 +30,7 @@ function catalog(registry) {
   return [...registry.values()].map(({ game, bot }) => ({
     id: game.id,
     name: game.name,
+    blurb: game.blurb || '',
     players: game.players,
     options: game.options || {},
     bots: !!bot,
